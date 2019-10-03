@@ -10,7 +10,7 @@ def crawling():
 def save(data):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     with open(os.path.join(BASE_DIR, 'result.json'), 'w+', encoding='UTF-8-sig') as json_file:
-        json_file.write(json.dumps(data, ensure_ascii=False))
+        json_file.write(json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4))
 
 def main():
     json_data = crawling()
