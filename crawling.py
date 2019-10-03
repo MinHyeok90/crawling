@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 import requests
 import json
 import os
@@ -10,9 +11,13 @@ item_url_pre = 'http://www.encar.com/dc/dc_cardetailview.do?pageid=dc_carsearch&
 item_url_post = '&wtClick_korList=019&advClickPosition=kor_normal_p1_g1'
 
 
-def save(data):
-    with open(os.path.join(BASE_DIR, file_title), 'w+', encoding='UTF-8-sig') as json_file:
+def save_data_title(data, title):
+    with open(os.path.join(BASE_DIR, title), 'w+', encoding='UTF-8-sig') as json_file:
         json_file.write(json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4))
+
+
+def save(data):
+    save_data_title(data, file_title)
 
 
 def crawling():
@@ -32,13 +37,28 @@ def from_file():
     return json_data
 
 
+def print_my_interests(title, results):
+    print("Result!")
+    print(title)
+    print(results)
+
+
 def my_interest_order():
     order = []
     order.append('Id')
+    order.append('ModifiedDate')
     order.append('Manufacturer')
     order.append('Price')
-    order.append('ModifiedDate')
+    order.append('Year')
+    order.append('Mileage')
+    order.append('Model')
     order.append('Badge')
+    return order
+
+
+def my_interest_order_and_photodate_view():
+    order = my_interest_order()
+    order.append('Photos_updatedDate')
     return order
 
 
@@ -77,22 +97,58 @@ def my_interest_order():
 
 def extract_my_interest(total_data):
     my_order = my_interest_order()
-    print(my_order)
+    records = []
     for item in total_data['SearchResults']:
+        record = {}
+        for key in my_order:
+            record[key] = item[key]
+        # record.append(item['Photos'][0]['updatedDate'])
         del item['Photos']
-        record = []
-        for i in my_order:
-            record.append(item[i])
-        print(record)
+        records.append(record)
+    return records
 
-def get_additional_info(id):
-    url = item_url_pre + id + item_url_post;
+
+def add_photo_date(records):
+    records_with_photodate = []
+    # TODO: implement add photodate to records
+    # for item in records:
+    #
+    return records_with_photodate
+
+
+def get_additional_info_from_url_by_id(id):
+    print("parsing: " + str(id) + "...");
+    url = item_url_pre + str(id) + item_url_post
     req = requests.get(url)
+    html = req.text
+    soup = BeautifulSoup(html, 'html.parser')
+    data = soup.find('ul', {'class': 'list_carinfo carinfo_etc'})
+    more_specific_data = data.find_all('em')
+    tmp = []
+    i = 0
+    for tag in more_specific_data:
+        if i == 2 or i == 4:  # 조회수, 찜
+            tmp.append(tag.text)
+        i = i + 1
+    return tmp
+
+
+def get_additional_info_from_url_by_records(table):
+    for item in table:
+        cnt_and_zzim = get_additional_info_from_url_by_id(item['Id'])
+        item['조회수'] = cnt_and_zzim[0]
+        item['찜수'] = cnt_and_zzim[1]
+    print(table)
+    return table
+
 
 def main():
     # json_data = crawling_and_save()
     json_data = from_file()
-    extract_my_interest(json_data)
+    result_records = extract_my_interest(json_data)
+    result_table = get_additional_info_from_url_by_records(result_records)
+    print_my_interests(my_interest_order_and_photodate_view(), result_table)
+    save_data_title(result_table, "result.json")
 
 
 main()
