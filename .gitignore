@@ -119,3 +119,6 @@ $RECYCLE.BIN/
 result.json
 result*
 # End of https://www.gitignore.io/api/pycharm,windows
+.idea/misc.xml
+venv/Include/
+venv/Lib/
