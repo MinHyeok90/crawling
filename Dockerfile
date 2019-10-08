@@ -1,4 +1,4 @@
-#>docker build --tag jungo-alarmer:2 .
+# docker build --tag jungo-alarmer:2 .
 FROM python:3
 COPY . /app
 WORKDIR /app
