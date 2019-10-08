@@ -1,4 +1,8 @@
 The app work with mongodb
 
-docker run
+#docker cmds
+docker run -d --name app jungo-car-app
 docker run --name mongo -p 27017:27017 -d mongo
+
+docker tag local-image:tagname new-repo:tagname
+docker push dufflaa/jungo-car-app:tagname
