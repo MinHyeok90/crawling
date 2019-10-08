@@ -117,4 +117,5 @@ $RECYCLE.BIN/
 *.lnk
 
 result.json
+result*
 # End of https://www.gitignore.io/api/pycharm,windows
