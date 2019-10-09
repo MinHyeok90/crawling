@@ -2,7 +2,6 @@ import pymongo
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-# myclient = pymongo.MongoClient("127.0.0.1", 27017)
 myclient = pymongo.MongoClient("mongodb://192.168.99.100:27017/")
 
 
@@ -13,7 +12,6 @@ def save_all(list_data):
 
 
 def find_all():
-    print("not tested")
     mydb = myclient.jungo_car_app
     mycol = mydb.jungo_cars
     res = []
