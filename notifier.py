@@ -3,11 +3,10 @@
 
 import telegram
 
-key = None
 chat_room = None
 
 def create_bot():
-    f = open('mykey', 'r')
+    f = open('my_key', 'r')
     key = f.readline()
     chat_room = f.readline()
 
@@ -26,6 +25,10 @@ def send(bot, message):
 
 
 def converter(data):
-    # TODO: dic to readable string list
+    print("not implement")
     readable = "string"
     return readable
+
+def notify(data):
+    readable_data = converter(data)
+    send(readable_data)

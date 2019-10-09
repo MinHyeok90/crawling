@@ -1,16 +1,6 @@
 from bs4 import BeautifulSoup
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.jobstores.base import JobLookupError
-import datetime
-import time
-import requests
-import pandas
-import json
-import os
-import pymongo
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-file_title = 'result.json'
+import requests
 
 search_url = 'http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.(C.CarType.Y._.Manufacturer.%ED%98%84%EB%8C%80.)_.OfficeCityState.%EA%B2%BD%EA%B8%B0._.Trust.ExtendWarranty._.Options.%EB%B8%8C%EB%A0%88%EC%9D%B4%ED%81%AC+%EC%9E%A0%EA%B9%80+%EB%B0%A9%EC%A7%80(ABS_)._.Options.%ED%9B%84%EB%B0%A9+%EC%B9%B4%EB%A9%94%EB%9D%BC._.Options.%EC%A3%BC%EC%B0%A8%EA%B0%90%EC%A7%80%EC%84%BC%EC%84%9C(%EC%A0%84%EB%B0%A9_)._.Category.SUV.)&sr=%7CModifiedDate%7C0%7C100'
 item_url_pre = 'http://www.encar.com/dc/dc_cardetailview.do?pageid=dc_carsearch&listAdvType=normal&carid='
@@ -31,30 +21,9 @@ def limiter_is_nedded_limit_for_test():
         return False
 
 
-def save_data_title(data, title):
-    with open(os.path.join(BASE_DIR, title), 'w+', encoding='UTF-8-sig') as json_file:
-        json_file.write(json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4))
-
-
-def save(data):
-    save_data_title(data, file_title)
-
-
-def crawling():
+def list_crawler():
     req = requests.get(search_url)
     return req.json()
-
-
-def crawling_and_save():
-    json_data = crawling()
-    save(json_data)
-    return json_data
-
-
-def from_file():
-    with open(os.path.join(BASE_DIR, file_title), encoding='UTF-8-sig') as json_file:
-        json_data = json.load(json_file)
-    return json_data
 
 
 def print_my_interests(title, results):
@@ -115,7 +84,7 @@ def my_interest_order_and_photodate_view():
 #             "Year": 201806.0
 #         },
 
-def extract_my_interest(total_data):
+def convert_to_my_interest(total_data):
     my_order = my_interest_order()
     records = []
     for item in total_data['SearchResults']:
@@ -136,7 +105,7 @@ def add_photo_date(records):
     return records_with_photodate
 
 
-def get_additional_info_from_url_by_id(id):
+def crawl_detail(id):
     print("parsing: " + str(id) + "...")
     url = item_url_pre + str(id) + item_url_post
     req = requests.get(url)
@@ -153,65 +122,18 @@ def get_additional_info_from_url_by_id(id):
     return tmp
 
 
-def get_additional_info_from_url_by_records(table):
+def crawl_detail_by_records_ids(table):
     for item in table:
-        cnt_and_zzim = get_additional_info_from_url_by_id(item['Id'])
+        cnt_and_zzim = crawl_detail(item['Id'])
         item['조회수'] = cnt_and_zzim[0]
         item['찜수'] = cnt_and_zzim[1]
     print(table)
     return table
 
 
-def create_database():
-    # myclient = pymongo.MongoClient("127.0.0.1", 27017)
-    myclient = pymongo.MongoClient("mongodb://192.168.99.100:27017/")
-    mydb = myclient["jungo_car_app"]
-    mycol = mydb["customers"]
-
-    mydic = {"name": "John"}
-    x = mycol.insert_one(mydic)
-    print(x.inserted_id)
-
-
-def get_added_ids(prev_ids, cur_ids):
-    # TODO:
-
-    print("not impl")
-
-
-def get_removed_ids(prev_ids, cur_ids):
-    # TODO: 
-    print("not impl")
-
-
-def save_to_csv(json_data):
-    df = pandas.read_json(json_data)
-    df.to_csv("test.csv", encoding='utf-8')
-
-
-def job():
-    print("do job")
-
-
-def repeat_job():
-    sched = BackgroundScheduler()
-    sched.start()
-    sched.add_job(job, 'interval', seconds=3, id="test_interval_1")
-
-
-def runner():
-    # json_data = crawling_and_save()
-    # json_data = from_file()
-    # result_records = extract_my_interest(json_data)
-    # result_table = get_additional_info_from_url_by_records(result_records)
+def crawling():
+    simple_json_list_data = list_crawler()
+    result_records = convert_to_my_interest(simple_json_list_data)
+    result_table = crawl_detail_by_records_ids(result_records)
+    return result_table
     # print_my_interests(my_interest_order_and_photodate_view(), result_table)
-    # save_data_title(result_table, "result_" + str(datetime.datetime.now()) + ".json")
-    # save_to_csv(result_table)
-    # create_database()
-    repeat_job()
-
-# count = 0
-# while True:
-#     print("Running main process...............")
-#     time.sleep(1)
-
