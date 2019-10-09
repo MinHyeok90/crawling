@@ -122,6 +122,6 @@ result*
 .idea/misc.xml
 venv/Include/
 venv/Lib/
-mykey
+my_*
 __pycache__/notifier.cpython-37.pyc
 __pycache__/crawling.cpython-37.pyc
