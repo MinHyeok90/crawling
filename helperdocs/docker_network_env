@@ -1,0 +1,7 @@
+# docker network setting
+method 1 : add route config to host [by https://m.blog.naver.com/PostView.nhn?blogId=skykbc&logNo=221260129107&categoryNo=59&proxyReferer=https%3A%2F%2Fwww.google.com%2F]
+host : route -p add 172.17.0.0 mask 255.255.0.0 192.168.99.100 IF 15
+  -> 192.168.99.100:27017 로 연결가능
+
+method 2 : bridge
+//아직 안해봄

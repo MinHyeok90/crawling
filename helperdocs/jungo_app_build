@@ -1,0 +1,7 @@
+#docker build
+pip freeze > requirements.txt
+docker build -t dufflaa/jungo-car-app:1 .
+docker push dufflaa/jungo-car-app:1
+
+#remove none tag images
+docker image prune

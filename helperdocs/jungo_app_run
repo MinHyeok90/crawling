@@ -1,0 +1,8 @@
+#run mongodb
+docker run -d --rm --name mymongo -p 27017:27017 mongo
+
+#run one time
+docker run -d --rm --name app dufflaa/jungo-car-app:1
+
+#run and keep container
+docker run -d --rm --name app dufflaa/jungo-car-app:1 tail -f /dev/null

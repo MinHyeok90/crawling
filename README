@@ -1,16 +1,4 @@
+This app crawl selling used car information from web
+if a good item find, notify it.
+
 The app work with mongodb
-
-#docker cmds
-docker build -t dufflaa/jungo-car-app:1 .
-docker run -d --rm --name app dufflaa/jungo-car-app:1
-docker run -d --rm --name mymongo -p 27017:27017 mongo
-
-docker inspect mymongo
-
-docker tag local-image:tagname new-repo:tagname
-docker push dufflaa/jungo-car-app:tagname
-
-# docker network setting
-method 1 : add route config to host [by https://m.blog.naver.com/PostView.nhn?blogId=skykbc&logNo=221260129107&categoryNo=59&proxyReferer=https%3A%2F%2Fwww.google.com%2F]
-host : route -p add 172.17.0.0 mask 255.255.0.0 192.168.99.100 IF 15
-  -> 192.168.99.100:27017 로 연결가능
