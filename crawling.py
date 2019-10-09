@@ -165,7 +165,7 @@ def get_additional_info_from_url_by_records(table):
 def create_database():
     # myclient = pymongo.MongoClient("127.0.0.1", 27017)
     myclient = pymongo.MongoClient("mongodb://192.168.99.100:27017/")
-    mydb = myclient["mydatabase"]
+    mydb = myclient["jungo_car_app"]
     mycol = mydb["customers"]
 
     mydic = {"name": "John"}
@@ -174,7 +174,8 @@ def create_database():
 
 
 def get_added_ids(prev_ids, cur_ids):
-    # TODO: 
+    # TODO:
+
     print("not impl")
 
 
@@ -198,7 +199,7 @@ def repeat_job():
     sched.add_job(job, 'interval', seconds=3, id="test_interval_1")
 
 
-def main():
+def runner():
     print("running jungo-car-app")
     # json_data = crawling_and_save()
     # json_data = from_file()
@@ -210,7 +211,7 @@ def main():
     # create_database()
     repeat_job()
 
-main()
+runner()
 
 # count = 0
 # while True:
