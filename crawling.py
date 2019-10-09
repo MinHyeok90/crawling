@@ -1,5 +1,8 @@
 from bs4 import BeautifulSoup
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.jobstores.base import JobLookupError
 import datetime
+import time
 import requests
 import pandas
 import json
@@ -185,7 +188,18 @@ def save_to_csv(json_data):
     df.to_csv("test.csv", encoding='utf-8')
 
 
+def job():
+    print("do job")
+
+
+def repeat_job():
+    sched = BackgroundScheduler()
+    sched.start()
+    sched.add_job(job, 'interval', seconds=3, id="test_interval_1")
+
+
 def main():
+    print("running jungo-car-app")
     # json_data = crawling_and_save()
     # json_data = from_file()
     # result_records = extract_my_interest(json_data)
@@ -193,7 +207,13 @@ def main():
     # print_my_interests(my_interest_order_and_photodate_view(), result_table)
     # save_data_title(result_table, "result_" + str(datetime.datetime.now()) + ".json")
     # save_to_csv(result_table)
-    create_database()
-
+    # create_database()
+    repeat_job()
 
 main()
+
+# count = 0
+# while True:
+#     print("Running main process...............")
+#     time.sleep(1)
+
