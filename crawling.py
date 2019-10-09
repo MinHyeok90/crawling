@@ -137,3 +137,9 @@ def crawling():
     result_table = crawl_detail_by_records_ids(result_records)
     return result_table
     # print_my_interests(my_interest_order_and_photodate_view(), result_table)
+
+def test():
+    data = crawling()
+    for x in data:
+        print(x)
+# test()
