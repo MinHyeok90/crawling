@@ -2,5 +2,9 @@
 # encoding=utf-8
 
 import crawling
+import notifier
 
-crawling.job()
+def main():
+    print(u"running jungo-car-app!")
+
+main()

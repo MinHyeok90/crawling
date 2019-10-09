@@ -3,11 +3,16 @@
 
 import telegram
 
-f = open('mykey', 'r')
-key = f.readline()
-chat_room = f.readline()
+key = None
+chat_room = None
 
-bot = telegram.Bot(token=key)
+def create_bot():
+    f = open('mykey', 'r')
+    key = f.readline()
+    chat_room = f.readline()
+
+    bot = telegram.Bot(token=key)
+    return bot
 
 
 # 생성한 텔레그램 봇 /start 시작 후 사용자 id 받아 오기
@@ -16,10 +21,11 @@ bot = telegram.Bot(token=key)
 # 사용자 id로 메시지 보내기
 # bot.sendMessage(chat_id, u'bot이 보낸 메시지')
 
+def send(bot, message):
+    bot.sendMessage(chat_room, message)
+
+
 def converter(data):
     # TODO: dic to readable string list
     readable = "string"
     return readable
-
-
-bot.sendMessage(chat_room, u'message')

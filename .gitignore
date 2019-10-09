@@ -123,3 +123,5 @@ result*
 venv/Include/
 venv/Lib/
 mykey
+__pycache__/notifier.cpython-37.pyc
+__pycache__/crawling.cpython-37.pyc

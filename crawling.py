@@ -137,7 +137,7 @@ def add_photo_date(records):
 
 
 def get_additional_info_from_url_by_id(id):
-    print("parsing: " + str(id) + "...");
+    print("parsing: " + str(id) + "...")
     url = item_url_pre + str(id) + item_url_post
     req = requests.get(url)
     html = req.text
@@ -200,7 +200,6 @@ def repeat_job():
 
 
 def runner():
-    print("running jungo-car-app")
     # json_data = crawling_and_save()
     # json_data = from_file()
     # result_records = extract_my_interest(json_data)
@@ -210,8 +209,6 @@ def runner():
     # save_to_csv(result_table)
     # create_database()
     repeat_job()
-
-runner()
 
 # count = 0
 # while True:
