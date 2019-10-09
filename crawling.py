@@ -4,6 +4,7 @@ import requests
 import pandas
 import json
 import os
+import pymongo
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 file_title = 'result.json'
@@ -159,8 +160,14 @@ def get_additional_info_from_url_by_records(table):
 
 
 def create_database():
-    # TODO: use sqlite3
-    print("not impl")
+    # myclient = pymongo.MongoClient("127.0.0.1", 27017)
+    myclient = pymongo.MongoClient("mongodb://192.168.99.100:27017/")
+    mydb = myclient["mydatabase"]
+    mycol = mydb["customers"]
+
+    mydic = {"name": "John"}
+    x = mycol.insert_one(mydic)
+    print(x.inserted_id)
 
 
 def get_added_ids(prev_ids, cur_ids):
@@ -180,12 +187,13 @@ def save_to_csv(json_data):
 
 def main():
     # json_data = crawling_and_save()
-    json_data = from_file()
-    result_records = extract_my_interest(json_data)
-    result_table = get_additional_info_from_url_by_records(result_records)
-    print_my_interests(my_interest_order_and_photodate_view(), result_table)
-    save_data_title(result_table, "result_" + str(datetime.datetime.now()) + ".json")
-    save_to_csv(result_table)
+    # json_data = from_file()
+    # result_records = extract_my_interest(json_data)
+    # result_table = get_additional_info_from_url_by_records(result_records)
+    # print_my_interests(my_interest_order_and_photodate_view(), result_table)
+    # save_data_title(result_table, "result_" + str(datetime.datetime.now()) + ".json")
+    # save_to_csv(result_table)
+    create_database()
 
 
 main()
