@@ -54,10 +54,12 @@ def drop_all():
     drop_deleted_cars()
 
 
-def update_leave_and_deleted(leave_and_deleted):
-    leave = leave_and_deleted['leave']
-    deleted = leave_and_deleted['deleted']
+def update_leave_and_deleted(separated_by_status):
+    newer = separated_by_status['newer']
+    leave = separated_by_status['leave']
+    deleted = separated_by_status['deleted']
     drop_leave_cars()
+    save_leave_cars(newer)
     save_leave_cars(leave)
     save_deleted_cars(deleted)
 
