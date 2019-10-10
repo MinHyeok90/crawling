@@ -1,5 +1,4 @@
 import subprocess
-import platform
 
 
 def log_success_decorator(func):
@@ -32,29 +31,38 @@ def push_container():
 
 @log_success_decorator
 def docker_stop_rm():
-    if platform.system() == 'Windows':
-        res = subprocess.call('docker ps -a | findstr "app"', shell=True)
-    else:
-        res = subprocess.call('docker ps -a | grep "app"', shell=True)
+    # if platform.system() == 'Windows':
+    #     res = subprocess.call('docker ps -a | findstr "app"', shell=True)
+    # else:
+    #     res = subprocess.call('docker ps -a | grep "app"', shell=True)
 
-    if res == 0:
-        return
     subprocess.call('docker stop app', shell=True)
     subprocess.call('docker rm app', shell=True)
 
 
 @log_success_decorator
 def docker_run_only_one():
-    # subprocess.call('docker run -d --rm --name app dufflaa/jungo-car-app:1', shell=True) # run one time
-    subprocess.call('docker run -d --rm --name app dufflaa/jungo-car-app:1 tail -f /dev/null',
-                    shell=True)  # run and keep container
+    # run one time
+    subprocess.call('docker run -d --rm --name app dufflaa/jungo-car-app:1', shell=True)
 
 
 @log_success_decorator
 def docker_run_keep_container():
-    # subprocess.call('docker run -d --rm --name app dufflaa/jungo-car-app:1', shell=True) # run one time
-    subprocess.call('docker run -d --rm --name app dufflaa/jungo-car-app:1 tail -f /dev/null',
-                    shell=True)  # run and keep container
+    # run and keep container
+    subprocess.call('docker run -d --rm --name app dufflaa/jungo-car-app:1 tail -f /dev/null', shell=True)
+
+
+@log_success_decorator
+def docker_cp_private_files():
+    subprocess.call('docker cp my_key app:/app/my_key', shell=True)
+    subprocess.call('docker cp my_chat_room app:/app/my_chat_room', shell=True)
+
+
+@log_success_decorator
+def docker_additional_job():
+    subprocess.call('docker exec app pip uninstall python-telegram-bot -y', shell=True)
+    subprocess.call('docker exec app pip install python-telegram-bot', shell=True)
+    subprocess.call('docker exec -d app python jungo_car_service.py', shell=True)
 
 
 @log_success_decorator
@@ -63,7 +71,10 @@ def docker_build_run():
     docker_build()
     # push_container()
     docker_stop_rm()
+    # docker_run_only_one()
     docker_run_keep_container()
+    docker_cp_private_files()
+    docker_additional_job()
 
 
 docker_build_run()
