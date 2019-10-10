@@ -52,7 +52,7 @@ def return_as_add_type_in_dic(original, leave_ids, newer_ids, deleted_ids):
     print("not impl")
 
 
-def return_as_separated_list_in_dic(original, newer, leave_ids, newer_ids, deleted_ids):
+def return_as_separated_list_in_dic(original, newer, newer_ids, leave_ids, deleted_ids):
     '''
         {
             'newer':[{id:1, }, {}, {}, ...],
@@ -76,8 +76,8 @@ def convert_for_save_with_status(ori_cars, leave, newer, deleted):
     return return_as_add_type_in_dic(ori_cars, leave, newer, deleted)
 
 
-def convert_separated_by_status(ori_cars, newer, leave_ids, newer_ids, deleted_ids):
-    return return_as_separated_list_in_dic(ori_cars, newer, leave_ids, newer_ids, deleted_ids)
+def convert_separated_by_status(ori_cars, newer, newer_ids, leave_ids, deleted_ids):
+    return return_as_separated_list_in_dic(ori_cars, newer, newer_ids, leave_ids, deleted_ids)
 
 
 def distinguish(cars):
