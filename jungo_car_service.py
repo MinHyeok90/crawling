@@ -7,7 +7,6 @@ import app_repository
 import notifier
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.jobstores.base import JobLookupError
 import time
 
 interval_sec = 600
@@ -21,9 +20,9 @@ def repeat_job():
 def main():
     print(u"running jungo-car-app!")
     data = crawling.crawling()
-    distinguished_data = distinguisher.distinguish(data)
-    app_repository.save(distinguished_data)
-    notifier.notify(distinguished_data)
+    distinguished_cars = distinguisher.distinguish(data)
+    app_repository.update_leave_and_deleted(distinguished_cars)
+    notifier.notify(distinguished_cars)
 
 main()
 repeat_job()

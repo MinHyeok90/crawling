@@ -134,9 +134,10 @@ def crawl_detail_by_records_ids(table):
 def crawling():
     simple_json_list_data = list_crawler()
     result_records = convert_to_my_interest(simple_json_list_data)
-    result_table = crawl_detail_by_records_ids(result_records)
-    return result_table
+    # result_table = crawl_detail_by_records_ids(result_records)
+    return result_records
     # print_my_interests(my_interest_order_and_photodate_view(), result_table)
+
 
 def test():
     data = crawling()
