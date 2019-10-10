@@ -26,6 +26,36 @@ def drop_all():
     mycol.drop()
 
 
+def save_leave_cars():
+    mydb = myclient.jungo_car_app
+    mycol = mydb.leave_cars
+    mycol.drop()
+
+
+def load_leave_cars():
+    mydb = myclient.jungo_car_app
+    mycol = mydb.leave_cars
+    res = []
+    for x in mycol.find():
+        res.append(x)
+    return res
+
+
+def save_deleted_cars():
+    mydb = myclient.jungo_car_app
+    mycol = mydb.deleted_cars
+    mycol.drop()
+
+
+def load_deleted_cars():
+    mydb = myclient.jungo_car_app
+    mycol = mydb.deleted_cars
+    res = []
+    for x in mycol.find():
+        res.append(x)
+    return res
+
+
 def save_all_test():
     mylist = [
         {'Id': '25167131', 'ModifiedDate': '2019-10-09 23:57:38.000 +09', 'Manufacturer': '현대', 'Price': 1950.0,
@@ -40,6 +70,8 @@ def save_all_test():
          'Year': 201705.0, 'Mileage': 67541.0, 'Model': '더 뉴 맥스크루즈', 'Badge': '디젤 2.2 4WD', '조회수': '1042', '찜수': '3'},
     ]
     save_all(mylist)
+
+
 # save_all_test()
 
 
