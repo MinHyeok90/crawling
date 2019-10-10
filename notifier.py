@@ -33,7 +33,7 @@ def create_link(num):
 
 
 def new_car_msg(newer):
-    hello = "===신규매물! " + str(len(newer)) + "건\n"
+    hello = "===신규 매물! " + str(len(newer)) + "건\n"
     contents = ""
     for car in newer:
         id = car['Id']

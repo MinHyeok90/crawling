@@ -66,7 +66,7 @@ def return_as_separated_list_in_dic(original, newer, leave_ids, newer_ids, delet
     for id in newer_ids:
         new_cars.append(newer[id])
     for id in leave_ids:
-        leave_cars.append(original[id])
+        leave_cars.append(newer[id])
     for id in deleted_ids:
         deleted_cars.append(original[id])
     return {'newer': new_cars, 'leave': leave_cars, 'deleted': deleted_cars}
@@ -111,8 +111,6 @@ def test():
     # convert_separated_by_status test
     print("convert_separated_by_status test")
     x = convert_separated_by_status(origi_cars, newer_cars, leave, newer, deleted)
-    for car in x:
-        print(car, x[car])
+    print(x)
 
-
-test()
+# test()
