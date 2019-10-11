@@ -131,7 +131,7 @@ def crawl_detail_by_records_ids(table):
     return table
 
 
-def crawling():
+def crawler():
     simple_json_list_data = list_crawler()
     result_records = convert_to_my_interest(simple_json_list_data)
     # result_table = crawl_detail_by_records_ids(result_records)
@@ -140,7 +140,7 @@ def crawling():
 
 
 def test():
-    data = crawling()
+    data = crawler()
     for x in data:
         print(x)
 # test()
