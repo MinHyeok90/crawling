@@ -41,9 +41,9 @@ def extract_deleted(separated_by_status):
     return separated_by_status['deleted']
 
 
-def new_car_msg(newer):
+def car_msg(cars):
     contents_list = []
-    for car in newer:
+    for car in cars:
         contents = car['Model'] + \
                    "/" + str(car['Price']) + \
                    "\n링크: " + create_link(car['Id']) + \
@@ -54,7 +54,7 @@ def new_car_msg(newer):
 
 def notify_newer_cars(separated_by_status):
     newer = separated_by_status['newer']
-    contents = new_car_msg(newer)
+    contents = car_msg(newer)
     if len(contents) > 15:
         for i in range(15):
             send("신규 " + str(i + 1) + "번째\n" + contents[i])
@@ -63,13 +63,20 @@ def notify_newer_cars(separated_by_status):
             send("신규 " + str(i + 1) + "번째\n" + contents[i])
 
 
+def notify_deleted_cars(separated_by_status):
+    deleted = separated_by_status['deleted']
+    contents = car_msg(deleted)
+    for i in range(len(contents)):
+        send("삭제 " + str(i + 1) + "\n" + contents[i])
+
+
 def notify_header(separated_by_status):
     newer = separated_by_status['newer']
     leave = separated_by_status['leave']
     deleted = separated_by_status['deleted']
     title = "신규" + str(len(newer)) + "/" + \
             "유지" + str(len(leave)) + "/" + \
-            "팔림" + str(len(deleted))
+            "삭제" + str(len(deleted))
     send(title)
 
 
