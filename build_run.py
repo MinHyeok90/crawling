@@ -69,7 +69,10 @@ def docker_additional_job():
 def show_log_for_success():
     print("\n")
     print("============= Log after Container Run =============")
-    subprocess.call('docker logs app', shell=True)
+    try:
+        subprocess.call('docker logs --follow app', shell=True)
+    except:
+        print("Good Lock!")
 
 
 @log_success_decorator
