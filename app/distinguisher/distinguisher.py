@@ -1,5 +1,5 @@
 from app.repository import app_repository
-
+from app.model.division_state_cars import DivisionStateCars
 original_data = []
 stay_ids = []
 new_ids = []
@@ -86,8 +86,9 @@ def distinguish(cars):
     newer_cars = converter_list_to_dic_id_as_key(cars)
 
     newer_ids, leave_ids, deleted_ids = new_leave_deleted_id_extractor(origi_cars, newer_cars)
-
-    return convert_separated_by_status(origi_cars, newer_cars, newer_ids, leave_ids, deleted_ids)
+    dsc = DivisionStateCars()
+    dsc.of(convert_separated_by_status(origi_cars, newer_cars, newer_ids, leave_ids, deleted_ids))
+    return dsc
 
 
 def test():

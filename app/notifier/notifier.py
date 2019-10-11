@@ -1,17 +1,23 @@
 #!/usr/bin/env python
 # encoding=utf-8
 import telegram
+import os
+from app.model.division_state_cars import DivisionStateCars
+
+
+def get_dic():
+    return os.path.dirname(os.path.abspath(__file__))
 
 
 def get_bot():
-    f = open('my_key', 'r')
+    f = open(get_dic() + '/my_key', 'r')
     key = f.readline()
     bot = telegram.Bot(token=key)
     return bot
 
 
 def get_chat_room():
-    f = open('my_chat_room', 'r')
+    f = open(get_dic() + '/my_chat_room', 'r')
     chat_room_number = f.readline()
     return chat_room_number
 
@@ -29,18 +35,6 @@ def create_link(num):
     return url_pre + num + url_post
 
 
-def extract_newer(separated_by_status):
-    return separated_by_status['newer']
-
-
-def extract_leave(separated_by_status):
-    return separated_by_status['leave']
-
-
-def extract_deleted(separated_by_status):
-    return separated_by_status['deleted']
-
-
 def car_msg(cars):
     contents_list = []
     for car in cars:
@@ -52,8 +46,8 @@ def car_msg(cars):
     return contents_list
 
 
-def notify_newer_cars(separated_by_status):
-    newer = separated_by_status['newer']
+def notify_newer_cars(dsc: DivisionStateCars):
+    newer = dsc.get_newer()
     contents = car_msg(newer)
     if len(contents) > 15:
         for i in range(15):
@@ -63,33 +57,40 @@ def notify_newer_cars(separated_by_status):
             send("신규 " + str(i + 1) + "번째\n" + contents[i])
 
 
-def notify_deleted_cars(separated_by_status):
-    deleted = separated_by_status['deleted']
+def notify_deleted_cars(dsc: DivisionStateCars):
+    deleted = dsc.get_deleted()
     contents = car_msg(deleted)
     for i in range(len(contents)):
         send("삭제 " + str(i + 1) + "\n" + contents[i])
 
 
-def notify_header(separated_by_status):
-    newer = separated_by_status['newer']
-    leave = separated_by_status['leave']
-    deleted = separated_by_status['deleted']
-    title = "신규" + str(len(newer)) + "/" + \
-            "유지" + str(len(leave)) + "/" + \
-            "삭제" + str(len(deleted))
+def notify_header(dsc: DivisionStateCars):
+    title = "신규" + str(dsc.get_len_newer()) + "/" + \
+            "유지" + str(dsc.get_len_leave()) + "/" + \
+            "삭제" + str(dsc.get_len_deleted())
     send(title)
 
 
-def notify_validator(separated_by_status):
-    if len(extract_newer(separated_by_status)) == 0 and len(extract_deleted(separated_by_status)) == 0:
+def notify_validator(dsc: DivisionStateCars):
+    if dsc.get_len_newer() == 0 and dsc.get_len_deleted() == 0:
         return False
     return True
 
 
-def notify(separated_by_status):
-    if notify_validator(separated_by_status):
-        notify_header(separated_by_status)
-        notify_newer_cars(separated_by_status)
+def notify(dsc: DivisionStateCars):
+    if notify_validator(dsc):
+        notify_header(dsc)
+        notify_newer_cars(dsc)
+
+
+def force_header_notify(dsc: DivisionStateCars):
+    notify_header(dsc)
+
+
+def force_header_notify_as_leave_by_list(leave):
+    dsc = DivisionStateCars()
+    dsc.set_leave(leave)
+    notify_header(dsc)
 
 
 def test():
@@ -104,4 +105,13 @@ def test():
     print("send long message test")
     notify(data)
 
-# test()
+
+def test_path():
+    import os
+    stri = os.path.dirname(os.path.abspath(__file__))
+    print(stri)
+
+# if __name__ == "__main__":
+    # test()
+test_path()
+pass

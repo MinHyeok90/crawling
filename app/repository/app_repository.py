@@ -1,5 +1,6 @@
 import pymongo
 import os
+from app.model.division_state_cars import DivisionStateCars
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 myclient = pymongo.MongoClient("mongodb://192.168.99.100:27017/")
@@ -54,14 +55,11 @@ def drop_all():
     drop_deleted_cars()
 
 
-def update_leave_and_deleted(separated_by_status):
-    newer = separated_by_status['newer']
-    leave = separated_by_status['leave']
-    deleted = separated_by_status['deleted']
+def update_leave_and_deleted(dsc):
     drop_leave_cars()
-    save_leave_cars(newer)
-    save_leave_cars(leave)
-    save_deleted_cars(deleted)
+    save_leave_cars(dsc.get_leave())
+    save_leave_cars(dsc.get_newer())
+    save_deleted_cars(dsc.get_deleted())
 
 
 def test():
@@ -69,3 +67,14 @@ def test():
     print("update_leave_and_deleted test")
     d = test.get_separated_by_status()
     update_leave_and_deleted(d)
+
+
+def repo_test():
+    from app import test
+    dsc = DivisionStateCars()
+    td = test.get_separated_by_status()
+    dsc.of(td)
+    update_leave_and_deleted(dsc)
+
+
+# repo_test()
