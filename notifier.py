@@ -78,8 +78,9 @@ def notify_validator(separated_by_status):
         return False
     return True
 
+
 def notify(separated_by_status):
-    if notify_validator():
+    if notify_validator(separated_by_status):
         notify_header(separated_by_status)
         notify_newer_cars(separated_by_status)
 
