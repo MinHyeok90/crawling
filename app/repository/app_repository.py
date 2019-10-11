@@ -65,7 +65,7 @@ def update_leave_and_deleted(separated_by_status):
 
 
 def test():
-    import test
+    from app import test
     print("update_leave_and_deleted test")
     d = test.get_separated_by_status()
     update_leave_and_deleted(d)

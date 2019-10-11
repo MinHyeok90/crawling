@@ -86,7 +86,7 @@ def notify(separated_by_status):
 
 
 def test():
-    import test
+    from app import test
     # print("get bot")
     # get_bot()
 

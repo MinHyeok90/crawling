@@ -1,4 +1,4 @@
-import app_repository
+from app.repository import app_repository
 
 original_data = []
 stay_ids = []
@@ -91,7 +91,7 @@ def distinguish(cars):
 
 
 def test():
-    import test
+    from app import test
     data4 = test.get_test_list_original()
     data2 = test.get_test_list_newer()
     origi_cars = converter_list_to_dic_id_as_key(data4)

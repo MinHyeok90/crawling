@@ -6,6 +6,6 @@ RUN pip uninstall python-telegram-bot -y
 RUN pip install python-telegram-bot
 ADD . /app
 ENTRYPOINT ["python"]
-CMD ["jungo_car_service.py"]
+CMD ["./app/jungo_car_service.py"]
 #CMD ["tail", "-f", "/dev/null"] #disable. cause docker logging not work.
 
