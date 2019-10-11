@@ -29,6 +29,18 @@ def create_link(num):
     return url_pre + num + url_post
 
 
+def extract_newer(separated_by_status):
+    return separated_by_status['newer']
+
+
+def extract_leave(separated_by_status):
+    return separated_by_status['leave']
+
+
+def extract_deleted(separated_by_status):
+    return separated_by_status['deleted']
+
+
 def new_car_msg(newer):
     contents_list = []
     for car in newer:
@@ -61,9 +73,15 @@ def notify_header(separated_by_status):
     send(title)
 
 
+def notify_validator(separated_by_status):
+    if len(extract_newer(separated_by_status)) == 0 and len(extract_deleted(separated_by_status)) == 0:
+        return False
+    return True
+
 def notify(separated_by_status):
-    notify_header(separated_by_status)
-    notify_newer_cars(separated_by_status)
+    if notify_validator():
+        notify_header(separated_by_status)
+        notify_newer_cars(separated_by_status)
 
 
 def test():

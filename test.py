@@ -63,8 +63,8 @@ def get_separated_by_status_three_newer():
               'Year': 201402.0, 'Mileage': 79786.0, 'Model': '맥스크루즈', 'Badge': '디젤(e-VGT) 2.2 4WD 익스클루시브', '조회수': '200',
               '찜수': '2'}
              ],
-        'leave':[]
-            ,
+        'leave': []
+        ,
         'deleted':
             [{'Id': '25377212', 'ModifiedDate': '2019-10-01 20:18:39.000 +09', 'Manufacturer': '현대', 'Price': 2590.0,
               'Year': 201705.0, 'Mileage': 67541.0, 'Model': '더 뉴 맥스크루즈', 'Badge': '디젤 2.2 4WD', '조회수': '1042',
@@ -72,4 +72,28 @@ def get_separated_by_status_three_newer():
              {'Id': '25167131', 'ModifiedDate': '2019-10-09 23:57:38.000 +09', 'Manufacturer': '현대', 'Price': 1950.0,
               'Year': 201402.0, 'Mileage': 79786.0, 'Model': '맥스크루즈', 'Badge': '디젤(e-VGT) 2.2 4WD 익스클루시브', '조회수': '200',
               '찜수': '2'}]
+    }
+
+
+def get_separated_by_status_only_leave():
+    return {
+        'newer': [],
+        'leave':
+            [{'Id': '99999999', 'ModifiedDate': '2019-10-09 23:57:38.000 +09', 'Manufacturer': '현대', 'Price': 1950.0,
+              'Year': 201402.0, 'Mileage': 79786.0, 'Model': '맥스크루즈', 'Badge': '디젤(e-VGT) 2.2 4WD 익스클루시브', '조회수': '200',
+              '찜수': '2'},
+             {'Id': '25109309', 'ModifiedDate': '2019-10-09 23:57:38.000 +09', 'Manufacturer': '현대', 'Price': 1950.0,
+              'Year': 201402.0, 'Mileage': 79786.0, 'Model': '맥스크루즈', 'Badge': '디젤(e-VGT) 2.2 4WD 익스클루시브', '조회수': '200',
+              '찜수': '2'},
+             {'Id': '25167131', 'ModifiedDate': '2019-10-09 23:57:38.000 +09', 'Manufacturer': '현대', 'Price': 1950.0,
+              'Year': 201402.0, 'Mileage': 79786.0, 'Model': '맥스크루즈', 'Badge': '디젤(e-VGT) 2.2 4WD 익스클루시브', '조회수': '200',
+              '찜수': '2'},
+             {'Id': '25377212', 'ModifiedDate': '2019-10-01 20:18:39.000 +09', 'Manufacturer': '현대', 'Price': 2590.0,
+              'Year': 201705.0, 'Mileage': 67541.0, 'Model': '더 뉴 맥스크루즈', 'Badge': '디젤 2.2 4WD', '조회수': '1042',
+              '찜수': '3'},
+             {'Id': '25167131', 'ModifiedDate': '2019-10-09 23:57:38.000 +09', 'Manufacturer': '현대', 'Price': 1950.0,
+              'Year': 201402.0, 'Mileage': 79786.0, 'Model': '맥스크루즈', 'Badge': '디젤(e-VGT) 2.2 4WD 익스클루시브', '조회수': '200',
+              '찜수': '2'}]
+        ,
+        'deleted': []
     }
