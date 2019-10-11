@@ -12,7 +12,7 @@ from app.notifier import notifier
 from app.distinguisher import distinguisher
 from app.repository import app_repository
 
-working_interval_sec = 600
+working_interval_sec = 60
 health_check_sec = 1
 
 
