@@ -43,13 +43,13 @@ def docker_stop_rm():
 @log_success_decorator
 def docker_run_only_one():
     # run one time
-    subprocess.call('docker run -t -d  --name app dufflaa/jungo-car-app:1', shell=True)
+    subprocess.call('docker run -t -d -e TZ=Asia/Seoul --name app dufflaa/jungo-car-app:1', shell=True)
 
 
 @log_success_decorator
 def docker_run_keep_container():
     # run and keep container
-    subprocess.call('docker run -t -d --name app dufflaa/jungo-car-app:1 tail -f /dev/null', shell=True)
+    subprocess.call('docker run -t -d -e TZ=Asia/Seoul --name app dufflaa/jungo-car-app:1 tail -f /dev/null', shell=True)
 
 
 @log_success_decorator

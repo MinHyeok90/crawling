@@ -4,6 +4,7 @@ import os
 import sys
 from apscheduler.schedulers.background import BlockingScheduler
 import datetime
+import pytz
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
@@ -23,7 +24,7 @@ def repeat_job():
 
 
 def main():
-    print(u"running jungo-car-app! (" + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + ")")
+    print(u"running jungo-car-app! (" + str(datetime.datetime.now(tz=pytz.timezone('Asia/Seoul'))) + ")")
     data = crawler.crawler()
     distinguished_cars = distinguisher.distinguish(data)
     app_repository.update_leave_and_deleted(distinguished_cars)
