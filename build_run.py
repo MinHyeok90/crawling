@@ -15,7 +15,7 @@ def log_success_decorator(func):
 
 @log_success_decorator
 def update_requirements():
-    subprocess.call('pip freeze > requirements.txt', shell=True)
+    subprocess.call('pip3 freeze > requirements.txt', shell=True)
 
 
 @log_success_decorator
