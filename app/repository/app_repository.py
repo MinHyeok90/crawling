@@ -3,7 +3,7 @@ import os
 from app.model.division_state_cars import DivisionStateCars
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-myclient = pymongo.MongoClient("mongodb://192.168.99.100:27017/")
+myclient = pymongo.MongoClient("mongodb://172.17.0.3:27017/")
 
 
 def save_leave_cars(leave_cars):
@@ -76,5 +76,7 @@ def repo_test():
     dsc.of(td)
     update_leave_and_deleted(dsc)
 
+
+# def connection_test():
 
 # repo_test()
