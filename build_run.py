@@ -83,7 +83,7 @@ def docker_build_run():
     docker_stop_rm()
     docker_run_only_one()
     # docker_run_keep_container()
-    # docker_cp_private_files()
+    docker_cp_private_files() #for product
     # docker_additional_job()
     # show_log_for_success()
 
