@@ -15,18 +15,12 @@ from app.repository import app_repository
 from app.model.division_state_cars import DivisionStateCars
 
 working_interval_sec = 60
-health_check_hours = 2
-
-
-def periodic_current_state_notify():
-    leave = app_repository.load_leave_cars()
-    notifier.force_header_notify_as_leave_by_list(leave)
 
 
 def start_scheduled_job():
     sched = BlockingScheduler()
-    sched.add_job(main, 'interval', seconds=working_interval_sec, id="real_time_1")
-    sched.add_job(periodic_current_state_notify, 'interval', hours=health_check_hours, id="health_check_1")
+    sched.add_job(main, 'interval',
+                  seconds=working_interval_sec, id="real_time_1")
     sched.start()
 
 
