@@ -70,7 +70,7 @@ def show_log_for_success():
     print("\n")
     print("============= Log after Container Run =============")
     try:
-        subprocess.call('docker logs --follow app', shell=True)
+        subprocess.call('docker logs --follow jungo-car-app', shell=True)
     except:
         print("Good Lock!")
 
@@ -83,7 +83,7 @@ def docker_build_run():
     docker_stop_rm()
     docker_run_only_one()
     # docker_run_keep_container()
-    docker_cp_private_files()
+    # docker_cp_private_files()
     # docker_additional_job()
     # show_log_for_success()
 
