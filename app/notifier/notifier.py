@@ -25,7 +25,7 @@ def get_chat_room():
 def send(message):
     bot = get_bot()
     chat_room = get_chat_room()
-    bot.sendMessage(chat_room, message)
+    bot.sendMessage(chat_room, "[알림봇]\n" + message)
     # print(message)
 
 
@@ -92,6 +92,11 @@ def force_header_notify_as_leave_by_list(leave):
     dsc = DivisionStateCars()
     dsc.set_leave(leave)
     notify_header(dsc)
+    
+    
+def hello_notify():
+    hello_message = "안녕하세요!\n저는 새롭게 업데이트 된 중고차 알림봇 입니다!\n새로운 매물을 누구보다 빠르게 알려드리겠습니다!\n감사합니다!"
+    send(hello_message)
 
 
 def test():

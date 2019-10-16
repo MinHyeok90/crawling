@@ -18,8 +18,7 @@ working_interval_sec = 60
 
 
 def init_notify():
-    leave = app_repository.load_leave_cars()
-    notifier.force_header_notify_as_leave_by_list(leave)
+    notifier.hello_notify()
 
 
 def start_scheduled_job():
@@ -38,7 +37,8 @@ def main():
 
 
 if __name__ == "__main__":
-    print(u"running jungo-car-app!")
+    print(u"Running jungo-car-app!")
     init_notify()
+    print(u"Notifier is successfully working!")
     main()
     start_scheduled_job()
