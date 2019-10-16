@@ -1,10 +1,9 @@
 FROM python:3.6.8
-WORKDIR /app
-COPY ./requirements.txt /app/requirements.txt
+WORKDIR /root
+RUN pip install --upgrade pip
+COPY ./requirements.txt /root/requirements.txt
 RUN pip install -r requirements.txt
-RUN pip uninstall python-telegram-bot -y
-RUN pip install python-telegram-bot
-ADD . /app
+ADD . /root
 ENTRYPOINT ["python3"]
 CMD ["./app/jungo_car_service.py"]
 #CMD ["tail", "-f", "/dev/null"] #disable. cause docker logging not work.
