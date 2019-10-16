@@ -54,8 +54,8 @@ def docker_run_keep_container():
 
 @log_success_decorator
 def docker_cp_private_files():
-    subprocess.call('docker cp my_key app:/app/my_key', shell=True)
-    subprocess.call('docker cp my_chat_room app:/app/my_chat_room', shell=True)
+    subprocess.call('docker cp /var/keys/my_key jungo-car-app:/app/app/notifier/my_key', shell=True)
+    subprocess.call('docker cp /var/keys/my_chat_room jungo-car-app:/app/app/notifier/my_chat_room', shell=True)
 
 
 @log_success_decorator
@@ -77,7 +77,7 @@ def show_log_for_success():
 
 @log_success_decorator
 def docker_build_run():
-    update_requirements()
+    # update_requirements() # this is source code resposibility
     docker_build()
     # push_container()
     docker_stop_rm()
@@ -85,7 +85,7 @@ def docker_build_run():
     # docker_run_keep_container()
     docker_cp_private_files()
     # docker_additional_job()
-    show_log_for_success()
+    # show_log_for_success()
 
 
 def test():
