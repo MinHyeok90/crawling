@@ -17,6 +17,11 @@ from app.model.division_state_cars import DivisionStateCars
 working_interval_sec = 60
 
 
+def init_notify():
+    leave = app_repository.load_leave_cars()
+    notifier.force_header_notify_as_leave_by_list(leave)
+
+
 def start_scheduled_job():
     sched = BlockingScheduler()
     sched.add_job(main, 'interval',
@@ -34,6 +39,6 @@ def main():
 
 if __name__ == "__main__":
     print(u"running jungo-car-app!")
+    init_notify()
     main()
-    periodic_current_state_notify()
     start_scheduled_job()
