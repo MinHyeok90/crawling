@@ -36,20 +36,20 @@ def docker_stop_rm():
     # else:
     #     res = subprocess.call('docker ps -a | grep "app"', shell=True)
 
-    subprocess.call('docker stop app', shell=True)
-    subprocess.call('docker rm app', shell=True)
+    subprocess.call('docker stop jungo-car-app', shell=True)
+    subprocess.call('docker rm jungo-car-app', shell=True)
 
 
 @log_success_decorator
 def docker_run_only_one():
     # run one time
-    subprocess.call('docker run -t -d -e TZ=Asia/Seoul --name app dufflaa/jungo-car-app:1', shell=True)
+    subprocess.call('docker run -t -d -e TZ=Asia/Seoul --name jungo-car-app dufflaa/jungo-car-app:1', shell=True)
 
 
 @log_success_decorator
 def docker_run_keep_container():
     # run and keep container
-    subprocess.call('docker run -t -d -e TZ=Asia/Seoul --name app dufflaa/jungo-car-app:1 tail -f /dev/null', shell=True)
+    subprocess.call('docker run -t -d -e TZ=Asia/Seoul --name jungo-car-app dufflaa/jungo-car-app:1 tail -f /dev/null', shell=True)
 
 
 @log_success_decorator
