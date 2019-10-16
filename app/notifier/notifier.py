@@ -39,9 +39,9 @@ def car_msg(cars):
     contents_list = []
     for car in cars:
         contents = car['Model'] + \
-                   "/" + str(car['Price']) + \
-                   "\n링크: " + create_link(car['Id']) + \
-                   "\n"
+            "/" + str(car['Price']) + \
+            "\n링크: " + create_link(car['Id']) + \
+            "\n"
         contents_list.append(contents)
     return contents_list
 
@@ -110,6 +110,7 @@ def test_path():
     import os
     stri = os.path.dirname(os.path.abspath(__file__))
     print(stri)
+
 
 # if __name__ == "__main__":
     # test()
