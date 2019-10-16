@@ -54,8 +54,8 @@ def docker_run_keep_container():
 
 @log_success_decorator
 def docker_cp_private_files():
-    subprocess.call('docker cp /var/keys/my_key jungo-car-app:/app/app/notifier/my_key', shell=True)
-    subprocess.call('docker cp /var/keys/my_chat_room jungo-car-app:/app/app/notifier/my_chat_room', shell=True)
+    subprocess.call('docker cp /var/keys/my_key jungo-car-app:/root/app/notifier/my_key', shell=True)
+    subprocess.call('docker cp /var/keys/my_chat_room jungo-car-app:/root/app/notifier/my_chat_room', shell=True)
 
 
 @log_success_decorator
