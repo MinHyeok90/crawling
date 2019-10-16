@@ -81,6 +81,7 @@ def notify(dsc: DivisionStateCars):
     if notify_validator(dsc):
         notify_header(dsc)
         notify_newer_cars(dsc)
+        notify_deleted_cars(dsc)
 
 
 def force_header_notify(dsc: DivisionStateCars):
