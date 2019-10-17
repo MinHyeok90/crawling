@@ -49,7 +49,7 @@ class PageUrlGenerator:
 
     def next(self):
         if self.has_next():
-            print(str(self.total_count) + " > " + str(self.i_in_list))
+            # print(str(self.total_count) + " > " + str(self.i_in_list))
             self.i_in_list += self.offset
             self._update_target_url()
         return self.target_encoded_url
