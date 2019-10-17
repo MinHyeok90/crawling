@@ -15,7 +15,7 @@ def log_success_decorator(func):
 
     return warp_func
 
-
+@log_success_decorator
 def get_env(mode):
     BASE_DIR = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), "app/_conf/settings/")
@@ -27,16 +27,8 @@ def get_env(mode):
         env = json.load(env_contents)
     return env
 
-
-def env_overwriter(mode):
-    BASE_DIR = os.path.join(os.path.dirname(
-        os.path.abspath(__file__)), "app/_conf/settings/")
-    if mode == "production":
-        file_title = 'production.json'
-    else:
-        file_title = 'development.json'
-    with open(os.path.join(BASE_DIR, file_title), encoding='UTF-8-sig') as env_contents:
-        env = json.load(env_contents)
+@log_success_decorator
+def env_overwriter(env):
     with open(os.path.join(BASE_DIR, 'current_env_mode.json'), 'w+', encoding='UTF-8-sig') as current_env:
         current_env.write(json.dumps(env, ensure_ascii=False))
 
@@ -119,10 +111,10 @@ def docker_build_run():
         
     print("--- Build : " + mode)
     env = get_env(mode)
-    env_overwriter(mode)
-    
     image_name = env['image_name']
     container_name = env['container_name']
+    
+    env_overwriter(env)    
     # update_requirements() # this is source code resposibility
     docker_build(image_name)
     # push_container(image_name)
