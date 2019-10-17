@@ -25,8 +25,12 @@ def get_chat_room():
 def send(message):
     bot = get_bot()
     chat_room = get_chat_room()
-    bot.sendMessage(chat_room, "[알림봇]\n" + message)
-    # print(message)
+    try:
+        bot.sendMessage(chat_room, "[알림봇]\n" + message)
+        pass
+    except expression as identifier:
+        print("전송실패 : " + message)
+        pass
 
 
 def create_link(num):
