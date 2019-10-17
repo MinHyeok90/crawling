@@ -10,6 +10,20 @@ def converter_list_to_dic_id_as_key(list_data):
         from : [{}, {}, {}]
         to : {'id':{}, 'id':{}, 'id':{}}
     '''
+    print(len(list_data))
+    # res = {}
+    # again = {}
+    # for j in range(len(list_data)):
+    #     if list_data[j]['Id'] in res:
+    #         if list_data[j]['Id'] in again:
+    #             again[list_data[j]['Id']] = again[list_data[j]['Id']] + 1
+    #         else:
+    #             again[list_data[j]['Id']] = 1
+    #     res[list_data[j]['Id']] = list_data[j]
+    # print(len(again))
+    # for j in again:
+    #     print("중복: " + str(j) + ", 횟수: " + str(again[j]))
+    # return res
     return dict((list_data[j]['Id'], list_data[j]) for j in range(len(list_data)))
 
 
