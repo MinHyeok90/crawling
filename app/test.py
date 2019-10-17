@@ -97,3 +97,12 @@ def get_separated_by_status_only_leave():
         ,
         'deleted': []
     }
+    
+    
+def get_url():
+    url = "http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.CarType.Y._.(Or.OfficeCityState.%EC%84%9C%EC%9A%B8._.OfficeCityState.%EA%B2%BD%EA%B8%B0.)_.Transmission.%EC%98%A4%ED%86%A0._.Category.SUV._.Trust.Inspection.)&sr=%7CModifiedDate%7C0%7C3"
+    return url
+
+def get_decoded_url():
+    url = "http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.(C.CarType.Y._.Manufacturer.현대.)_.OfficeCityState.경기._.Trust.ExtendWarranty._.Options.브레이크+잠김+방지(ABS_)._.Options.후방+카메라._.Options.주차감지센서(전방_)._.Category.SUV.)&sr=|ModifiedDate|0|3"
+    return url
