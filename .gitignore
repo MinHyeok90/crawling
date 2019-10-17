@@ -126,3 +126,5 @@ my_*
 *.pyc
 
 venv
+
+_conf
