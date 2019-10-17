@@ -1,10 +1,11 @@
 import pymongo
 import os
-from app.model.division_state_cars import DivisionStateCars
+# from app.model.division_state_cars import DivisionStateCars
+from app import setting_reader
 
+env = setting_reader.get_env()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-myclient = pymongo.MongoClient("mongodb://172.17.0.3:27017/")
-
+myclient = pymongo.MongoClient(env['database']['host'])
 
 def save_leave_cars(leave_cars):
     if len(leave_cars) > 0:
