@@ -29,6 +29,8 @@ def get_env(mode):
 
 @log_success_decorator
 def env_overwriter(env):
+    BASE_DIR = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), "app/_conf/settings/")
     with open(os.path.join(BASE_DIR, 'current_env_mode.json'), 'w+', encoding='UTF-8-sig') as current_env:
         current_env.write(json.dumps(env, ensure_ascii=False))
 
