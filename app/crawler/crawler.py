@@ -1,8 +1,11 @@
 from bs4 import BeautifulSoup
-
+from urllib import parse
 import requests
 
-search_url = 'http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.(C.CarType.Y._.Manufacturer.%ED%98%84%EB%8C%80.)_.OfficeCityState.%EA%B2%BD%EA%B8%B0._.Trust.ExtendWarranty._.Options.%EB%B8%8C%EB%A0%88%EC%9D%B4%ED%81%AC+%EC%9E%A0%EA%B9%80+%EB%B0%A9%EC%A7%80(ABS_)._.Options.%ED%9B%84%EB%B0%A9+%EC%B9%B4%EB%A9%94%EB%9D%BC._.Options.%EC%A3%BC%EC%B0%A8%EA%B0%90%EC%A7%80%EC%84%BC%EC%84%9C(%EC%A0%84%EB%B0%A9_)._.Category.SUV.)&sr=%7CModifiedDate%7C0%7C100'
+from app.crawler.page_url_generator import PageUrlGenerator
+
+parsed_url = parse.urlparse("http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.CarType.Y._.(Or.OfficeCityState.%EC%84%9C%EC%9A%B8._.OfficeCityState.%EA%B2%BD%EA%B8%B0.)_.Transmission.%EC%98%A4%ED%86%A0._.Category.SUV._.Trust.Inspection.)&sr=%7CModifiedDate%7C0%7C50")
+# search_url = 'http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.(C.CarType.Y._.Manufacturer.%ED%98%84%EB%8C%80.)_.OfficeCityState.%EA%B2%BD%EA%B8%B0._.Trust.ExtendWarranty._.Options.%EB%B8%8C%EB%A0%88%EC%9D%B4%ED%81%AC+%EC%9E%A0%EA%B9%80+%EB%B0%A9%EC%A7%80(ABS_)._.Options.%ED%9B%84%EB%B0%A9+%EC%B9%B4%EB%A9%94%EB%9D%BC._.Options.%EC%A3%BC%EC%B0%A8%EA%B0%90%EC%A7%80%EC%84%BC%EC%84%9C(%EC%A0%84%EB%B0%A9_)._.Category.SUV.)&sr=%7CModifiedDate%7C0%7C100'
 item_url_pre = 'http://www.encar.com/dc/dc_cardetailview.do?pageid=dc_carsearch&listAdvType=normal&carid='
 item_url_post = '&wtClick_korList=019&advClickPosition=kor_normal_p1_g1'
 
@@ -19,11 +22,6 @@ def limiter_is_nedded_limit_for_test():
         return True
     else:
         return False
-
-
-def list_crawler():
-    req = requests.get(search_url)
-    return req.json()
 
 
 def print_my_interests(title, results):
@@ -131,12 +129,39 @@ def crawl_detail_by_records_ids(table):
     return table
 
 
+def send(search_url):
+    req = requests.get(search_url)
+    return req.json()
+    '''
+    {
+        Count: 5391,
+        SearchResults: [
+            {}
+            {}
+        ]
+    }
+    '''
+
+
+def list_crawler(cur_url):
+    return send(cur_url)
+
+
 def crawler():
-    simple_json_list_data = list_crawler()
+    global parsed_url
+    pug = PageUrlGenerator()
+    pug.source_url(parsed_url.geturl())
+    pug.initialize()
+    cur_url = pug.first_url()
+    simple_json_list_data = list_crawler(cur_url)
     result_records = convert_to_my_interest(simple_json_list_data)
+    
+    while pug.has_next(): #TODO
+        url = pug.next()
+        simple_json_list_data = list_crawler(url)
+        result_records.extend(convert_to_my_interest(simple_json_list_data))
     # result_table = crawl_detail_by_records_ids(result_records)
     return result_records
-    # print_my_interests(my_interest_order_and_photodate_view(), result_table)
 
 
 def test():
