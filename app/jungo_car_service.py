@@ -14,7 +14,7 @@ from app.distinguisher import distinguisher
 from app.repository import app_repository
 from app.model.division_state_cars import DivisionStateCars
 
-working_interval_sec = 60
+working_interval_sec = 60 * 5
 
 
 def init_notify():
@@ -42,3 +42,8 @@ if __name__ == "__main__":
     print(u"Notifier is successfully working!")
     main()
     start_scheduled_job()
+
+# def test():
+#     app_repository    
+    
+# test()
