@@ -11,7 +11,6 @@ def converter_list_to_dic_id_as_key(list_data):
         to : {'id':{}, 'id':{}, 'id':{}}
     '''
     res = {}
-    again = {}
     for j in range(len(list_data)):
         if list_data[j]['Id'] in res:
             print("중복 발생!")
@@ -89,7 +88,6 @@ def convert_separated_by_status(ori_cars, newer, newer_ids, leave_ids, deleted_i
 
 
 def distinguish(cars):
-    print("현재 확인 매물 수:" + str(len(cars)))
     original_car_list = app_repository.load_leave_cars()
     dsc = DivisionStateCars()
     try:
