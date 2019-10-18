@@ -10,21 +10,15 @@ def converter_list_to_dic_id_as_key(list_data):
         from : [{}, {}, {}]
         to : {'id':{}, 'id':{}, 'id':{}}
     '''
-    print(len(list_data))
-    # res = {}
-    # again = {}
-    # for j in range(len(list_data)):
-    #     if list_data[j]['Id'] in res:
-    #         if list_data[j]['Id'] in again:
-    #             again[list_data[j]['Id']] = again[list_data[j]['Id']] + 1
-    #         else:
-    #             again[list_data[j]['Id']] = 1
-    #     res[list_data[j]['Id']] = list_data[j]
-    # print(len(again))
-    # for j in again:
-    #     print("중복: " + str(j) + ", 횟수: " + str(again[j]))
-    # return res
-    return dict((list_data[j]['Id'], list_data[j]) for j in range(len(list_data)))
+    res = {}
+    again = {}
+    for j in range(len(list_data)):
+        if list_data[j]['Id'] in res:
+            print("중복 발생!")
+            raise "UnreliableData"
+        res[list_data[j]['Id']] = list_data[j]
+    return res
+    # return dict((list_data[j]['Id'], list_data[j]) for j in range(len(list_data)))
 
 
 def converter_dic_to_list(dics):
@@ -95,13 +89,18 @@ def convert_separated_by_status(ori_cars, newer, newer_ids, leave_ids, deleted_i
 
 
 def distinguish(cars):
+    print("현재 확인 매물 수:" + str(len(cars)))
     original_car_list = app_repository.load_leave_cars()
-    origi_cars = converter_list_to_dic_id_as_key(original_car_list)
-    newer_cars = converter_list_to_dic_id_as_key(cars)
-
-    newer_ids, leave_ids, deleted_ids = new_leave_deleted_id_extractor(origi_cars, newer_cars)
     dsc = DivisionStateCars()
-    dsc.of(convert_separated_by_status(origi_cars, newer_cars, newer_ids, leave_ids, deleted_ids))
+    try:
+        origi_cars = converter_list_to_dic_id_as_key(original_car_list)
+        newer_cars = converter_list_to_dic_id_as_key(cars)
+        newer_ids, leave_ids, deleted_ids = new_leave_deleted_id_extractor(origi_cars, newer_cars)
+        dsc = DivisionStateCars()
+        dsc.of(convert_separated_by_status(origi_cars, newer_cars, newer_ids, leave_ids, deleted_ids))
+    except:
+        raise "신뢰할 수 없는 데이터 발생."
+
     return dsc
 
 
