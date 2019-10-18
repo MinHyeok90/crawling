@@ -33,39 +33,45 @@ def send(message):
         pass
 
 
+def send_contents_list(contents, type):
+    for i in range(len(contents_list)):
+        send(type + str(i + 1) + "번째\n" + contents_list[i])
+
+
 def create_link(num):
     url_pre = 'www.encar.com/dc/dc_cardetailview.do?pageid=dc_carsearch&listAdvType=normal&carid='
     url_post = '&wtClick_korList=019&advClickPosition=kor_normal_p1_g1'
     return url_pre + num + url_post
 
 
-def car_msg(cars):
-    contents_list = []
-    for car in cars:
-        contents = car['Model'] + \
-            "/" + str(car['Price']) + \
-            "\n링크: " + create_link(car['Id']) + \
-            "\n"
-        contents_list.append(contents)
-    return contents_list
+def create_car_msg_basic(car):
+    contents = car['Model'] + "/" + str(round(car['Price'])) + "만원"
+    return contents
+
+
+def cut_limit(car_list):
+    return car_list[0:10]
 
 
 def notify_newer_cars(dsc: DivisionStateCars):
     newer = dsc.get_newer()
-    contents = car_msg(newer)
-    if len(contents) > 15:
-        for i in range(15):
-            send("신규 " + str(i + 1) + "번째\n" + contents[i])
-    else:
-        for i in range(len(contents)):
-            send("신규 " + str(i + 1) + "번째\n" + contents[i])
+    newer = cut_limit(newer)
+    contents_list = []
+    for car in newer:
+        contents = create_car_msg_basic(car) + \
+            "\n" + create_link(car['Id'])
+        contents_list.append(contents)
+    send_contents_list(contents_list, "신규")
 
 
 def notify_deleted_cars(dsc: DivisionStateCars):
     deleted = dsc.get_deleted()
-    contents = car_msg(deleted)
-    for i in range(len(contents)):
-        send("삭제 " + str(i + 1) + "\n" + contents[i])
+    deleted = cut_limit(deleted)
+    contents_list = []
+    for car in deleted:
+        contents = create_car_msg_basic(car)
+        contents_list.append(contents)
+    send_contents_list(contents_list, "삭제")
 
 
 def notify_header(dsc: DivisionStateCars):
@@ -96,8 +102,8 @@ def force_header_notify_as_leave_by_list(leave):
     dsc = DivisionStateCars()
     dsc.set_leave(leave)
     notify_header(dsc)
-    
-    
+
+
 def hello_notify():
     hello_message = "안녕하세요!\n저는 새롭게 업데이트 된 중고차 알림봇 입니다!\n새로운 매물을 누구보다 빠르게 알려드리겠습니다!\n감사합니다!"
     send(hello_message)
@@ -124,5 +130,5 @@ def test_path():
 
 # if __name__ == "__main__":
     # test()
-test_path()
-pass
+# test_path()
+# pass
