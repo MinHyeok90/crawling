@@ -1,8 +1,8 @@
 from bs4 import BeautifulSoup
 from urllib import parse
 import requests
-
 from app.crawler.page_url_generator import PageUrlGenerator
+from app.crawler.exceptions.changed_total_count import ChangedTotalCount
 
 parsed_url = parse.urlparse("http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.CarType.Y._.(Or.OfficeCityState.%EC%84%9C%EC%9A%B8._.OfficeCityState.%EA%B2%BD%EA%B8%B0.)_.Transmission.%EC%98%A4%ED%86%A0._.Category.SUV._.Trust.Inspection.)&sr=%7CModifiedDate%7C0%7C50")
 # search_url = 'http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.(C.CarType.Y._.Manufacturer.%ED%98%84%EB%8C%80.)_.OfficeCityState.%EA%B2%BD%EA%B8%B0._.Trust.ExtendWarranty._.Options.%EB%B8%8C%EB%A0%88%EC%9D%B4%ED%81%AC+%EC%9E%A0%EA%B9%80+%EB%B0%A9%EC%A7%80(ABS_)._.Options.%ED%9B%84%EB%B0%A9+%EC%B9%B4%EB%A9%94%EB%9D%BC._.Options.%EC%A3%BC%EC%B0%A8%EA%B0%90%EC%A7%80%EC%84%BC%EC%84%9C(%EC%A0%84%EB%B0%A9_)._.Category.SUV.)&sr=%7CModifiedDate%7C0%7C100'
@@ -48,39 +48,6 @@ def my_interest_order_and_photodate_view():
     order.append('Photos_updatedDate')
     return order
 
-
-# {
-#             "Badge": "디젤 2.0 4WD",
-#             "BadgeDetail": "프레스티지",
-#             "FormYear": "2019",
-#             "FuelType": "디젤",
-#             "Id": "25049206",
-#             "Manufacturer": "현대",
-#             "Mileage": 11923.0,
-#             "Model": "싼타페 TM",
-#             "ModifiedDate": "2019-10-03 19:31:00.000 +09",
-#             "OfficeCityState": "경기",
-#             "Photo": "/carpicture04/pic2504/25049206_",
-#             "Photos": [
-#                 {
-#                     "location": "/carpicture04/pic2504/25049206_001.jpg",
-#                     "ordering": 1.0,
-#                     "type": "001",
-#                     "updatedDate": "2019-07-08T03:31:11Z"
-#                 }
-#             ],
-#             "Price": 3290.0,
-#             "Separation": [
-#                 "B"
-#             ],
-#             "Transmission": "오토",
-#             "Trust": [
-#                 "Warranty",
-#                 "ExtendWarranty",
-#                 "Inspection"
-#             ],
-#             "Year": 201806.0
-#         },
 
 def convert_to_my_interest(total_data):
     my_order = my_interest_order()
@@ -129,38 +96,55 @@ def crawl_detail_by_records_ids(table):
     return table
 
 
-def send(search_url):
+def send_request(search_url):
     req = requests.get(search_url)
     return req.json()
-    '''
-    {
-        Count: 5391,
-        SearchResults: [
-            {}
-            {}
-        ]
-    }
-    '''
 
 
 def list_crawler(cur_url):
-    return send(cur_url)
+    return send_request(cur_url)
+
+
+def validate_list_duplicate_item(cars):
+    res = {}
+    for car in cars:
+        if car['Id'] in res:
+            print("중복 발생!")
+            raise "UnreliableData"
+        res[car['Id']] = 0
+
+
+def crawl(pug: PageUrlGenerator):
+    cur_url = pug.first_url()
+    simple_json_list_data = list_crawler(cur_url)
+    result_records = convert_to_my_interest(simple_json_list_data)
+    creteria_count = int(simple_json_list_data['Count'])
+    cur_total_count = simple_json_list_data['Count']
+    print("매물", creteria_count, "개 확인! 로딩 중...")
+    while cur_total_count > len(result_records):
+        url = pug.next()
+        simple_json_list_data = list_crawler(url)
+        cur_total_count = simple_json_list_data['Count']
+        result_records.extend(convert_to_my_interest(simple_json_list_data))
+        if creteria_count != cur_total_count:
+            raise ChangedTotalCount("이야 받는 도중에 갯수가 바뀌네~!" + str(len(result_records)) + "까지 받았는데 아쉽구만")
+    return result_records
 
 
 def crawler():
     global parsed_url
-    pug = PageUrlGenerator()
-    pug.source_url(parsed_url.geturl())
-    pug.initialize()
-    cur_url = pug.first_url()
-    simple_json_list_data = list_crawler(cur_url)
-    result_records = convert_to_my_interest(simple_json_list_data)
-    
-    while pug.has_next(): #TODO
-        url = pug.next()
-        simple_json_list_data = list_crawler(url)
-        result_records.extend(convert_to_my_interest(simple_json_list_data))
-    # result_table = crawl_detail_by_records_ids(result_records)
+    is_failure = True
+    try:
+        pug = PageUrlGenerator()
+        pug.source_url(parsed_url.geturl())
+        pug.initialize()
+        result_records = crawl(pug)
+        validate_list_duplicate_item(result_records)
+        is_failure = False
+    except Exception:
+        print("실패했네? 괜찮아! 좀 이따 알아서 하겠지!")
+        raise "Crawl_Fail"
+        
     return result_records
 
 
