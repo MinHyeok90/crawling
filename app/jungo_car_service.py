@@ -40,7 +40,7 @@ def main():
     except:
         print("작업 중 문제가 발생함.")
         traceback.print_exc()
-        pass    
+        pass
     
 
 if __name__ == "__main__":

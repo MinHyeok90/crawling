@@ -33,7 +33,7 @@ def send(message):
         pass
 
 
-def send_contents_list(contents, type):
+def send_contents_list(contents_list, type):
     for i in range(len(contents_list)):
         send(type + str(i + 1) + "번째\n" + contents_list[i])
 
@@ -69,15 +69,17 @@ def notify_deleted_cars(dsc: DivisionStateCars):
     deleted = cut_limit(deleted)
     contents_list = []
     for car in deleted:
-        contents = create_car_msg_basic(car)
+        contents = create_car_msg_basic(car) + \
+            "\n" + create_link(car['Id'])
         contents_list.append(contents)
     send_contents_list(contents_list, "삭제")
 
 
 def notify_header(dsc: DivisionStateCars):
-    title = "신규" + str(dsc.get_len_newer()) + "/" + \
-            "유지" + str(dsc.get_len_leave()) + "/" + \
-            "삭제" + str(dsc.get_len_deleted())
+    title = "■■■■■■ 총 매물" + str(dsc.get_len_exist_total()) + "개 ■■■■■■\n" + \
+            "신규: " + str(dsc.get_len_newer()) + "\n" + \
+            "유지: " + str(dsc.get_len_leave()) + "\n" + \
+            "삭제: " + str(dsc.get_len_deleted())
     send(title)
 
 

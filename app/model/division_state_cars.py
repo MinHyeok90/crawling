@@ -6,6 +6,7 @@ class DivisionStateCars:
         self.len_newer = 0
         self.len_leave = 0
         self.len_deleted = 0
+        self.len_exist_total = 0
 
     def of(self, separated_by_status):
         self.newer = separated_by_status['newer']
@@ -14,6 +15,7 @@ class DivisionStateCars:
         self.len_newer = len(self.newer)
         self.len_leave = len(self.leave)
         self.len_deleted = len(self.deleted)
+        self.len_exist_total = self.len_newer + self.len_leave
 
     def set_leave(self, leave_cars):
         self.leave = leave_cars
@@ -36,3 +38,6 @@ class DivisionStateCars:
 
     def get_len_deleted(self):
         return self.len_deleted
+    
+    def get_len_exist_total(self):
+        return self.len_exist_total
