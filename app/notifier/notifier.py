@@ -76,7 +76,7 @@ def notify_deleted_cars(dsc: DivisionStateCars):
 
 
 def notify_header(dsc: DivisionStateCars):
-    title = "■■■■■■ 총 매물" + str(dsc.get_len_exist_total()) + "개 ■■■■■■\n" + \
+    title = "■■■■■■ 유효 매물" + str(dsc.get_len_exist_total()) + "개 ■■■■■■\n" + \
             "신규: " + str(dsc.get_len_newer()) + "\n" + \
             "유지: " + str(dsc.get_len_leave()) + "\n" + \
             "삭제: " + str(dsc.get_len_deleted())
@@ -92,8 +92,9 @@ def notify_validator(dsc: DivisionStateCars):
 def notify(dsc: DivisionStateCars):
     if notify_validator(dsc):
         notify_header(dsc)
-        notify_newer_cars(dsc)
         notify_deleted_cars(dsc)
+        notify_newer_cars(dsc)
+        print("송신완료")
 
 
 def force_header_notify(dsc: DivisionStateCars):
