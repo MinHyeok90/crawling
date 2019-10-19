@@ -8,8 +8,10 @@ from dateutil.parser import parse
 
 from string import Template
 
+
 class DeltaTemplate(Template):
     delimiter = "%"
+
 
 def strfdelta(tdelta, fmt):
     d = {"D": tdelta.days}
@@ -66,11 +68,10 @@ def create_link(num):
 
 def create_car_msg_basic(car):
     contents = car['Model'] + " / " + \
-            str(round(car['Price'])) + "만원 / " + \
-            car['Badge'] + " / " + \
-            str(round(car['Year'])) + " / " + \
-            str(round(car['Mileage'])) + " km /"
-            
+        str(format(round(car['Price']), ',')) + "만원 / " + \
+        car['Badge'] + " / " + \
+        str(round(car['Year'])) + " / " + \
+        str(format(round(car['Mileage']), ',')) + " km /"
     return contents
 
 
@@ -95,16 +96,17 @@ def notify_deleted_cars(dsc: DivisionStateCars):
     contents_list = []
     for car in deleted:
         contents = create_car_msg_basic(car)
-        contents += "\n확인된지 " + get_time_delta_from_now(car['ModifiedDate']) + " 후"
+        contents += "\n등록된지 " + \
+            get_time_delta_from_now(car['ModifiedDate']) + " 후"
         contents_list.append(contents)
     send_contents_list(contents_list, "삭제")
 
 
 def notify_header(dsc: DivisionStateCars):
     title = "■■■■■■ 유효 매물" + str(dsc.get_len_exist_total()) + "개 ■■■■■■\n" + \
-            "신규: " + str(dsc.get_len_newer()) + "\n" + \
-            "유지: " + str(dsc.get_len_leave()) + "\n" + \
-            "삭제: " + str(dsc.get_len_deleted())
+            "■ 신규: " + format(dsc.get_len_newer(), ',') + "\n" + \
+            "■ 유지: " + format(dsc.get_len_leave(), ',') + "\n" + \
+            "■ 삭제: " + format(dsc.get_len_deleted(), ',')
     send(title)
 
 
