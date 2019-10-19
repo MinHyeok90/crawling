@@ -161,6 +161,7 @@ def crawler():
         try:
             pug: PageUrlGenerator = init_pageurlgenerator()
             result_records = crawl(pug)
+            validate_list_duplicate_item(result_records)
             pass
         except:
             print("재시도실패")

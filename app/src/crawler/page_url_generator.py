@@ -40,6 +40,9 @@ class PageUrlGenerator:
         self.source_encoded_url = original_url
         
     def initialize(self):
+        self.i_in_list = 0
+        self.offset = 400
+        self.total_count = 0
         self._getting_total_count()
         self._set_source_decoded_url(self.source_encoded_url)
         self._update_target_url()
