@@ -3,6 +3,26 @@
 import telegram
 import os
 from model.division_state_cars import DivisionStateCars
+import datetime
+from dateutil.parser import parse
+
+from string import Template
+
+class DeltaTemplate(Template):
+    delimiter = "%"
+
+def strfdelta(tdelta, fmt):
+    d = {"D": tdelta.days}
+    d["H"], rem = divmod(tdelta.seconds, 3600)
+    d["M"], d["S"] = divmod(rem, 60)
+    t = DeltaTemplate(fmt)
+    return t.substitute(**d)
+
+
+def get_time_delta_from_now(modi_date):
+    from_date = parse(modi_date).replace(tzinfo=None)
+    now = datetime.datetime.now().replace(tzinfo=None)
+    return strfdelta(now - from_date, "%D일  %H시간 %M분")
 
 
 def get_dic():
@@ -45,7 +65,12 @@ def create_link(num):
 
 
 def create_car_msg_basic(car):
-    contents = car['Model'] + "/" + str(round(car['Price'])) + "만원"
+    contents = car['Model'] + " / " + \
+            str(round(car['Price'])) + "만원 / " + \
+            car['Badge'] + " / " + \
+            str(round(car['Year'])) + " / " + \
+            str(round(car['Mileage'])) + " km /"
+            
     return contents
 
 
@@ -69,8 +94,8 @@ def notify_deleted_cars(dsc: DivisionStateCars):
     deleted = cut_limit(deleted)
     contents_list = []
     for car in deleted:
-        contents = create_car_msg_basic(car) + \
-            "\n" + create_link(car['Id'])
+        contents = create_car_msg_basic(car)
+        contents += "\n확인된지 " + get_time_delta_from_now(car['ModifiedDate']) + " 후"
         contents_list.append(contents)
     send_contents_list(contents_list, "삭제")
 
