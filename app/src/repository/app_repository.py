@@ -1,7 +1,7 @@
 import pymongo
 import os
-# from app.model.division_state_cars import DivisionStateCars
-from app import setting_reader
+# from model.division_state_cars import DivisionStateCars
+import setting_reader
 
 env = setting_reader.get_env()
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))

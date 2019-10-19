@@ -2,7 +2,7 @@
 # encoding=utf-8
 import telegram
 import os
-from app.model.division_state_cars import DivisionStateCars
+from model.division_state_cars import DivisionStateCars
 
 
 def get_dic():

@@ -1,5 +1,5 @@
-from app.repository import app_repository
-from app.model.division_state_cars import DivisionStateCars
+from repository import app_repository
+from model.division_state_cars import DivisionStateCars
 original_data = []
 stay_ids = []
 new_ids = []

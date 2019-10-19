@@ -9,12 +9,12 @@ import pytz
 
 sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
-from app.crawler import crawler
-from app.notifier import notifier
-from app.distinguisher import distinguisher
-from app.repository import app_repository
-from app.model.division_state_cars import DivisionStateCars
-from app.crawler.exceptions.fail_crawl import FailCrawl
+from crawler import crawler
+from notifier import notifier
+from distinguisher import distinguisher
+from repository import app_repository
+from model.division_state_cars import DivisionStateCars
+from crawler.exceptions.fail_crawl import FailCrawl
 
 working_interval_sec = 60 * 1
 
