@@ -3,6 +3,8 @@ from urllib import parse
 import requests
 from app.crawler.page_url_generator import PageUrlGenerator
 from app.crawler.exceptions.changed_total_count import ChangedTotalCount
+from app.crawler.exceptions.fail_crawl import FailCrawl
+from app.crawler.exceptions.duplicate_item import DuplicateItem
 
 parsed_url = parse.urlparse("http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.CarType.Y._.(Or.OfficeCityState.%EC%84%9C%EC%9A%B8._.OfficeCityState.%EA%B2%BD%EA%B8%B0.)_.Transmission.%EC%98%A4%ED%86%A0._.Category.SUV._.Trust.Inspection.)&sr=%7CModifiedDate%7C0%7C50")
 # search_url = 'http://api.encar.com/search/car/list/premium?count=true&q=(And.Hidden.N._.(C.CarType.Y._.Manufacturer.%ED%98%84%EB%8C%80.)_.OfficeCityState.%EA%B2%BD%EA%B8%B0._.Trust.ExtendWarranty._.Options.%EB%B8%8C%EB%A0%88%EC%9D%B4%ED%81%AC+%EC%9E%A0%EA%B9%80+%EB%B0%A9%EC%A7%80(ABS_)._.Options.%ED%9B%84%EB%B0%A9+%EC%B9%B4%EB%A9%94%EB%9D%BC._.Options.%EC%A3%BC%EC%B0%A8%EA%B0%90%EC%A7%80%EC%84%BC%EC%84%9C(%EC%A0%84%EB%B0%A9_)._.Category.SUV.)&sr=%7CModifiedDate%7C0%7C100'
@@ -107,11 +109,27 @@ def list_crawler(cur_url):
 
 def validate_list_duplicate_item(cars):
     res = {}
+    duplicated = set()
     for car in cars:
         if car['Id'] in res:
-            print("중복 발생!")
-            raise "UnreliableData"
-        res[car['Id']] = 0
+            res[car['Id']] += 1
+            duplicated.add(car['Id'])
+        else:
+            res[car['Id']] = 1
+
+    if len(duplicated) > 0:
+        duplicaters = []
+        for x in duplicated:
+            duplicaters.append((x, res[x]))
+        raise DuplicateItem(str(list(duplicaters)))
+
+
+def init_pageurlgenerator():
+    global parsed_url
+    pug = PageUrlGenerator()
+    pug.source_url(parsed_url.geturl())
+    pug.initialize()
+    return pug
 
 
 def crawl(pug: PageUrlGenerator):
@@ -127,24 +145,34 @@ def crawl(pug: PageUrlGenerator):
         cur_total_count = simple_json_list_data['Count']
         result_records.extend(convert_to_my_interest(simple_json_list_data))
         if creteria_count != cur_total_count:
-            raise ChangedTotalCount("이야 받는 도중에 갯수가 바뀌네~!" + str(len(result_records)) + "까지 받았는데 아쉽구만")
+            raise ChangedTotalCount(str(
+                "ChangedTotalCount from " + str(creteria_count) + " to " + str(cur_total_count)))
     return result_records
 
 
 def crawler():
-    global parsed_url
-    is_failure = True
     try:
-        pug = PageUrlGenerator()
-        pug.source_url(parsed_url.geturl())
-        pug.initialize()
+        pug: PageUrlGenerator = init_pageurlgenerator()
         result_records = crawl(pug)
         validate_list_duplicate_item(result_records)
-        is_failure = False
-    except Exception:
-        print("실패했네? 괜찮아! 좀 이따 알아서 하겠지!")
-        raise "Crawl_Fail"
-        
+    except ChangedTotalCount as e:
+        print("총 수 변경 발생", e)
+        print("재시도")
+        try:
+            pug: PageUrlGenerator = init_pageurlgenerator()
+            result_records = crawl(pug)
+            pass
+        except:
+            print("재시도실패")
+            raise FailCrawl("Fail retry ChangedTotalCount")
+
+    except DuplicateItem as e:
+        print("종복 발생", e)
+        raise FailCrawl("DuplicateItem")
+    except Exception as e:
+        print("알 수 없는 이유로 실패했네? 괜찮아! 좀 이따 알아서 하겠지!")
+        raise FailCrawl(e)
+
     return result_records
 
 

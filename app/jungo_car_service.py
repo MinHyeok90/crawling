@@ -14,6 +14,7 @@ from app.notifier import notifier
 from app.distinguisher import distinguisher
 from app.repository import app_repository
 from app.model.division_state_cars import DivisionStateCars
+from app.crawler.exceptions.fail_crawl import FailCrawl
 
 working_interval_sec = 60 * 1
 
@@ -30,17 +31,20 @@ def start_scheduled_job():
 
 
 def main():
-    print(str(datetime.datetime.now(tz=pytz.timezone('Asia/Seoul'))))
+    print(str(datetime.datetime.now(tz=pytz.timezone('Asia/Seoul')).strftime("%Y/%m/%d %H:%M:%S")))
     try:
         data = crawler.crawler()
         dsc: DivisionStateCars = distinguisher.distinguish(data)
         app_repository.update_leave_and_deleted(dsc)
         notifier.notify(dsc)
-        print("루프 끝")
-    except:
-        print("작업 중 문제가 발생함.")
+    except FailCrawl as e:
+        print("크롤링 중 문제가 발생했습니다.", e)
+        pass
+    except Exception as e:
+        print("작업 중 예상치 못한 문제가 발생함.", e)
         traceback.print_exc()
         pass
+    print("루프 끝")
     
 
 if __name__ == "__main__":
