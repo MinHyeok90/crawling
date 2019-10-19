@@ -1,5 +1,6 @@
 from repository import app_repository
 from model.division_state_cars import DivisionStateCars
+from crawler.validator import Validator
 original_data = []
 stay_ids = []
 new_ids = []
@@ -20,23 +21,12 @@ def converter_list_to_dic_id_as_key(list_data):
     # return dict((list_data[j]['Id'], list_data[j]) for j in range(len(list_data)))
 
 
-def converter_dic_to_list(dics):
-    '''
-        from : {'id':{}, 'id':{}, 'id':{}}
-        to : [{}, {}, {}]
-    '''
-    res = []
-    for key, value in dics:
-        res.append(value)
-    return res
+def new_ids_extractor(original, new):
+    return new.keys() - original.keys()
 
 
 def leave_ids_extractor(original, new):
     return original.keys() & new.keys()
-
-
-def new_ids_extractor(original, new):
-    return new.keys() - original.keys()
 
 
 def deleted_ids_extractor(original, new):
@@ -61,6 +51,7 @@ def return_as_add_type_in_dic(original, leave_ids, newer_ids, deleted_ids):
 
 def return_as_separated_list_in_dic(original, newer, newer_ids, leave_ids, deleted_ids):
     '''
+        return to 
         {
             'newer':[{id:1, }, {}, {}, ...],
             'leave':[{id:2, }, {}, {}, ...],
@@ -71,11 +62,11 @@ def return_as_separated_list_in_dic(original, newer, newer_ids, leave_ids, delet
     leave_cars = []
     deleted_cars = []
     for id in newer_ids:
-        new_cars.append(newer[id])
+        new_cars.append(newer.get(id))
     for id in leave_ids:
-        leave_cars.append(newer[id])
+        leave_cars.append(original.get(id))
     for id in deleted_ids:
-        deleted_cars.append(original[id])
+        deleted_cars.append(original.get(id))
     return {'newer': new_cars, 'leave': leave_cars, 'deleted': deleted_cars}
 
 
@@ -91,6 +82,7 @@ def distinguish(cars):
     original_car_list = app_repository.load_leave_cars()
     dsc = DivisionStateCars()
     try:
+        Validator().check_duplicate_item(cars)
         origi_cars = converter_list_to_dic_id_as_key(original_car_list)
         newer_cars = converter_list_to_dic_id_as_key(cars)
         newer_ids, leave_ids, deleted_ids = new_leave_deleted_id_extractor(origi_cars, newer_cars)
