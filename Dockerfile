@@ -5,6 +5,6 @@ COPY ./requirements.txt /root/requirements.txt
 RUN pip install -r requirements.txt
 ADD . /root
 ENTRYPOINT ["python3"]
-CMD ["./app/jungo_car_service.py"]
+CMD ["./app/src/jungo_car_service.py"]
 #CMD ["tail", "-f", "/dev/null"] #disable. cause docker logging not work.
 
