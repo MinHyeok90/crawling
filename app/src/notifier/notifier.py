@@ -50,7 +50,7 @@ def send(message):
     try:
         bot.sendMessage(chat_room, "[알림봇]\n" + message)
         pass
-    except expression as identifier:
+    except:
         print("전송실패 : " + message)
         pass
 
@@ -90,14 +90,26 @@ def notify_newer_cars(dsc: DivisionStateCars):
     send_contents_list(contents_list, "신규")
 
 
+def notify_updated_cars(dsc: DivisionStateCars):
+    updated = dsc.get_updated()
+    updated = cut_limit(updated)
+    contents_list = []
+    for car in updated:
+        contents = create_car_msg_basic(car) + \
+            "\n" + create_link(car['Id'])
+        contents_list.append(contents)
+    send_contents_list(contents_list, "갱신")
+
+
 def notify_deleted_cars(dsc: DivisionStateCars):
     deleted = dsc.get_deleted()
     deleted = cut_limit(deleted)
     contents_list = []
     for car in deleted:
         contents = create_car_msg_basic(car)
-        contents += "\n등록된지 " + \
-            get_time_delta_from_now(car['ModifiedDate']) + " 후"
+        contents += "\n" + car['Id'] + " / "
+        contents += "\n등록 후 " + \
+            get_time_delta_from_now(car['ModifiedDate']) + ""
         contents_list.append(contents)
     send_contents_list(contents_list, "삭제")
 
@@ -106,12 +118,13 @@ def notify_header(dsc: DivisionStateCars):
     title = "■■■■■■ 유효 매물" + str(dsc.get_len_exist_total()) + "개 ■■■■■■\n" + \
             "■ 신규: " + format(dsc.get_len_newer(), ',') + "\n" + \
             "■ 유지: " + format(dsc.get_len_leave(), ',') + "\n" + \
+            "■ 갱신: " + format(dsc.get_len_updated(), ',') + "\n" + \
             "■ 삭제: " + format(dsc.get_len_deleted(), ',')
     send(title)
 
 
 def notify_validator(dsc: DivisionStateCars):
-    if dsc.get_len_newer() == 0 and dsc.get_len_deleted() == 0:
+    if dsc.get_len_newer() == 0 and dsc.get_len_deleted() == 0 and dsc.get_len_updated:
         return False
     return True
 
@@ -120,6 +133,7 @@ def notify(dsc: DivisionStateCars):
     if notify_validator(dsc):
         notify_header(dsc)
         notify_deleted_cars(dsc)
+        notify_updated_cars(dsc)
         notify_newer_cars(dsc)
         print("송신완료")
 
